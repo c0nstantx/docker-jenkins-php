@@ -11,7 +11,7 @@ MAINTAINER Konstantinos Christofilos <kostas.christofilos@rocketgraph.com>
 RUN \
   apt-get update && \
   apt-get -y upgrade && \
-  apt-get install -y curl git htop vim wget
+  apt-get install -y curl git htop vim wget openjdk-7-jdk
 
 # Install PHP 5.6
 RUN \
