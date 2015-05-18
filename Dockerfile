@@ -36,6 +36,19 @@ RUN \
 # Install latest phpunit
 RUN wget -q https://phar.phpunit.de/phpunit.phar ; chmod +x phpunit.phar ; mv phpunit.phar /usr/bin/phpunit
 
+# Install PHPLOC
+RUN wget -q https://phar.phpunit.de/phploc.phar ; chmod +x phploc.phar ; mv phploc.phar /usr/local/bin/phploc
+
+# Install PHP Depend
+RUN wget -q http://static.pdepend.org/php/latest/pdepend.phar ; chmod +x pdepend.phar ; mv pdepend.phar /usr/local/bin/pdepend
+
+# Install PHP_CodeSniffer
+RUN wget -q https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar ; chmod +x phpcs.phar ; mv phpcs.phar /usr/local/bin/phpcs
+RUN wget -q https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar ; chmod +x phpcbf.phar ; mv phpcbf.phar /usr/local/bin/phpcbf
+
+# Instal PHP Copy/Paste Detector (PHPCPD)
+RUN wget -q https://phar.phpunit.de/phpcpd.phar ; chmod +x phpcpd.phar ; mv phpcpd.phar /usr/local/bin/phpcpd
+
 # Install phpdoc
 RUN wget -q http://www.phpdoc.org/phpDocumentor.phar ; chmod +x phpDocumentor.phar ; mv phpDocumentor.phar /usr/bin/phpdoc
 
