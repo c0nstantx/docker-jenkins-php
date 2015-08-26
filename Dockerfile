@@ -62,6 +62,10 @@ RUN \
 RUN mkdir -p /var/jenkins_home
 
 ENV JENKINS_HOME=/var/jenkins_home
+
+#Install Node.js and npm
+RUN apt-get install -y node npm
+
 # Define mountable directories.
 VOLUME ["/var/jenkins_home"]
 
