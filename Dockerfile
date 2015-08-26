@@ -19,7 +19,7 @@ RUN \
   echo "deb-src http://packages.dotdeb.org wheezy-php56 all" >> /etc/apt/sources.list.d/dotdeb.list && \
   wget http://www.dotdeb.org/dotdeb.gpg -O- |apt-key add - && \
   apt-get -y update && \
-  apt-get -y install php5-cli php5-xsl php5-sqlite php5-curl php5-dev graphviz
+  apt-get -y install php5-cli php5-xsl php5-mysql php5-sqlite php5-curl php5-dev graphviz
 
 RUN echo 'date.timezone = "UTC"' >> /etc/php5/cli/php.ini
 
