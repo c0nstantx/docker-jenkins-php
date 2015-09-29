@@ -65,6 +65,10 @@ ENV JENKINS_HOME=/var/jenkins_home
 
 #Install Node.js and npm
 RUN apt-get install -y node npm
+RUN ln -s /usr/bin/nodejs /usr/sbin/node
+
+#Install Gulp
+npm install -g gulp
 
 # Define mountable directories.
 VOLUME ["/var/jenkins_home"]
