@@ -7,6 +7,8 @@ FROM ubuntu:14.04
 
 MAINTAINER Konstantinos Christofilos <kostas.christofilos@rocketgraph.com>
 
+ENV DEBIAN_FRONTEND noninteractive
+
 # Install base.
 RUN \
   apt-get update && \
@@ -65,10 +67,11 @@ ENV JENKINS_HOME=/var/jenkins_home
 
 #Install Node.js and npm
 RUN apt-get install -y node npm
+RUN mv /usr/sbin/node /usr/sbin/node.BACKUP
 RUN ln -s /usr/bin/nodejs /usr/sbin/node
 
 #Install Gulp
-npm install -g gulp
+RUN npm install -g gulp
 
 # Define mountable directories.
 VOLUME ["/var/jenkins_home"]
