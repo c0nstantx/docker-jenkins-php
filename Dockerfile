@@ -15,25 +15,79 @@ RUN \
   apt-get -y upgrade && \
   apt-get install -y curl git htop vim wget openjdk-7-jdk
 
-# Install PHP 5.6
-RUN \
-  echo "deb http://packages.dotdeb.org wheezy-php56 all" >> /etc/apt/sources.list.d/dotdeb.list && \
-  echo "deb-src http://packages.dotdeb.org wheezy-php56 all" >> /etc/apt/sources.list.d/dotdeb.list && \
-  wget http://www.dotdeb.org/dotdeb.gpg -O- |apt-key add - && \
-  apt-get -y update && \
-  apt-get -y install php5-cli php5-xsl php5-mysql php5-sqlite php5-curl php5-dev graphviz
+# Install PHP 7
+ 
+# Download source and signature
+RUN curl -SL "http://php.net/get/php-7.0.2.tar.gz/from/this/mirror" -o php7.tar.gz
+RUN curl -SL "http://php.net/get/php-7.0.2.tar.gz.asc/from/this/mirror" -o php7.tar.gz.asc
 
-RUN echo 'date.timezone = "UTC"' >> /etc/php5/cli/php.ini
+# Verify file
+RUN gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "1A4E8B7277C42E53DBA9C7B9BCAA30EA9C0D5763"
+RUN gpg --verify php7.tar.gz.asc php7.tar.gz
 
-# Install xdebug
-RUN \
-  git clone https://github.com/xdebug/xdebug.git && \
-  cd xdebug && \
-  phpize && \
-  ./configure --enable-xdebug && \
-  make && \
-  cp modules/xdebug.so /usr/lib/php5/ && \
-  echo "zend_extension=/usr/lib/php5/xdebug.so" >> /etc/php5/cli/php.ini
+# Install tools for compile
+RUN apt-get install -y build-essential libxml2-dev libcurl4-gnutls-dev libpng-dev libmcrypt-dev libxslt-dev libicu-dev libssl-dev libbz2-dev libjpeg-dev autoconf
+
+# Uncompress
+RUN tar zxvf php7.tar.gz
+
+ENV PHP_VERSION 7.0.2
+
+ENV PHP_CLI_INI_DIR /etc/php7/cli
+
+RUN mkdir -p $PHP_CLI_INI_DIR/conf.d
+
+#php7-cli
+RUN cd php-7.0.2 && \
+    ./configure \
+    --with-config-file-path="$PHP_CLI_INI_DIR" \
+    --with-config-file-scan-dir="$PHP_CLI_INI_DIR/conf.d" \
+    --with-libdir=/lib/x86_64-linux-gnu \
+    --enable-mysqlnd \
+    --enable-intl \
+    --enable-mbstring \
+    --enable-zip \
+    --enable-exif \
+    --enable-pcntl \
+    --enable-bcmath \
+    --enable-ftp \
+    --enable-exif \
+    --enable-calendar \
+    --enable-sysvmsg \
+    --enable-sysvsem \
+    --enable-sysvshm \
+    --enable-wddx \
+    --enable-gd-native-ttf \
+    --enable-gd-jis-conv \
+    --enable-sockets \
+    --enable-opcache \
+    --enable-sysvsem \
+    --enable-sysvshm \
+    --with-curl \
+    --with-mysqli=mysqlnd \
+    --with-pdo-mysql=mysqlnd \
+    --with-openssl \
+    --with-xsl \
+    --with-gd \
+    --with-mcrypt \
+    --with-iconv \
+    --with-bz2 \
+    --with-mhash \
+    --with-jpeg-dir=/usr \
+    --with-png-dir=/usr \
+    --with-zlib && \
+    make -j"$(nproc)" && \
+    make install && \
+    make clean
+
+# Clear files
+RUN rm -rf php*
+
+# Create session folder
+RUN mkdir -p /var/lib/php7/sessions
+RUN chown www-data:root /var/lib/php7/sessions
+
+ADD ./php_cli.ini /etc/php7/cli/php.ini
 
 # Install latest phpunit
 RUN wget -q https://phar.phpunit.de/phpunit.phar ; chmod +x phpunit.phar ; mv phpunit.phar /usr/bin/phpunit
