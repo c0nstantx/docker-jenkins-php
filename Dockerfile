@@ -88,6 +88,7 @@ RUN mkdir -p /var/lib/php7/sessions
 RUN chown www-data:root /var/lib/php7/sessions
 
 ADD ./php_cli.ini /etc/php7/cli/php.ini
+ADD ./browscap.ini /etc/php7/browscap.ini
 
 # Install latest phpunit
 RUN wget -q https://phar.phpunit.de/phpunit.phar ; chmod +x phpunit.phar ; mv phpunit.phar /usr/bin/phpunit
