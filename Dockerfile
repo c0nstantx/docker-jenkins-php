@@ -18,8 +18,8 @@ RUN \
 # Install PHP 7
  
 # Download source and signature
-RUN curl -SL "http://php.net/get/php-7.0.2.tar.gz/from/this/mirror" -o php7.tar.gz
-RUN curl -SL "http://php.net/get/php-7.0.2.tar.gz.asc/from/this/mirror" -o php7.tar.gz.asc
+RUN curl -SL "http://php.net/get/php-7.0.3.tar.gz/from/this/mirror" -o php7.tar.gz
+RUN curl -SL "http://php.net/get/php-7.0.3.tar.gz.asc/from/this/mirror" -o php7.tar.gz.asc
 
 # Verify file
 RUN gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "1A4E8B7277C42E53DBA9C7B9BCAA30EA9C0D5763"
@@ -31,14 +31,14 @@ RUN apt-get install -y build-essential libxml2-dev libcurl4-gnutls-dev libpng-de
 # Uncompress
 RUN tar zxvf php7.tar.gz
 
-ENV PHP_VERSION 7.0.2
+ENV PHP_VERSION 7.0.3
 
 ENV PHP_CLI_INI_DIR /etc/php7/cli
 
 RUN mkdir -p $PHP_CLI_INI_DIR/conf.d
 
 #php7-cli
-RUN cd php-7.0.2 && \
+RUN cd php-7.0.3 && \
     ./configure \
     --with-config-file-path="$PHP_CLI_INI_DIR" \
     --with-config-file-scan-dir="$PHP_CLI_INI_DIR/conf.d" \
