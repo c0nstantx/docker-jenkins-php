@@ -31,14 +31,14 @@ RUN apt-get install -y build-essential libxml2-dev libcurl4-gnutls-dev libpng-de
 # Uncompress
 RUN tar zxvf php7.tar.gz
 
-ENV PHP_VERSION 7.0.3
+ENV PHP_VERSION 7.0.7
 
 ENV PHP_CLI_INI_DIR /etc/php7/cli
 
 RUN mkdir -p $PHP_CLI_INI_DIR/conf.d
 
 #php7-cli
-RUN cd php-7.0.3 && \
+RUN cd php-7.0.7 && \
     ./configure \
     --with-config-file-path="$PHP_CLI_INI_DIR" \
     --with-config-file-scan-dir="$PHP_CLI_INI_DIR/conf.d" \
@@ -80,8 +80,19 @@ RUN cd php-7.0.3 && \
     make install && \
     make clean
 
+# Install APCu
+RUN curl -SL "https://pecl.php.net/get/apcu-5.1.4.tgz" -o apcu.tgz
+RUN tar zxvf apcu.tgz
+
+RUN cd apcu-5.1.4 && \
+    phpize && \
+    ./configure && \
+    make && \
+    cp modules/apcu.so /usr/local/lib/php/extensions/no-debug-non-zts-20151012
+
 # Clear files
 RUN rm -rf php*
+RUN rm -rf apcu*
 
 # Create session folder
 RUN mkdir -p /var/lib/php7/sessions
